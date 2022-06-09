@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;700&family=Open+Sans:wght@600&family=Poppins&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="https://fxrallyadministrator.com/frontend/ralcop/images/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>RallyTrade IB calculator</title>
+    <style>
+        * {
+            font-family: 'montserrat', 'sans-serif';
+        }
+
+        .form-select, .form-select:link, .form-select:visited, .form-select:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .ibCalWrap {
+            width: 100%;
+        }
+
+        .progress {
+            height: 2rem;
+        }
+
+        /* ruler settings */
+        .mili-ruler {
+            height: 5px;
+            margin-left: -1px;
+            width: 2px;
+            background: #cccccc;
+        }
+
+        .mili-mark {
+            font-size: 0.4rem;
+            font-weight: 500;
+        }
+
+        @media (min-width: 768px) {
+            .ibCalWrap {
+                width: 90%;
+                font-size: 0.8rem;
+            }
+
+            .mili-mark {
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+        }
+
+        @media (min-width: 1366px) {
+            .ibCalWrap {
+                width: 75%;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ibCalWrap mx-auto mt-md-4 p-4 rounded box-shadow" style="background: #f8f8f8">
+        <div class="ib-form col-12 d-block d-md-flex">
+            <div class="ib-type col-12 col-md-3 p-0 px-md-0 p-md-2 mb-4 mb-md-0">
+                <div class="ls-group">
+                    <label class="form-label d-block mb-0" for="">Account Type</label>
+                    <select class="form-select" aria-label="Default select example" id="actType">
+                        <option value="10">Basic</option>
+                        <option value="2">Standard</option>
+                        <option value="2">Pro</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="lots col-12 col-md-3 p-0 p-md-2 mb-4 mb-md-0">
+                <div class="ls-group">
+                    <label class="form-label d-block mb-0" for="">Lots Size</label>
+                    <select class="form-select" aria-label="Default select example" id="lotsTrade">
+                        <option value="0">0</option>
+                        <option value="2.7027">10</option>
+                        <option value="5.40541">20</option>
+                        <option value="8.10811">30</option>
+                        <option value="10.8108">40</option>
+                        <option value="13.5135">50</option>
+                        <option value="16.2162">60</option>
+                        <option value="18.9189">70</option>
+                        <option value="21.6216">80</option>
+                        <option value="24.3243">90</option>
+                        <option value="27.0270">100</option>
+                        <option value="29.7297">200</option>
+                        <option value="32.4324">300</option>
+                        <option value="37.8378">400</option>
+                        <option value="40.5405">500</option>
+                        <option value="43.2432">600</option>
+                        <option value="45.9459">700</option>
+                        <option value="48.6486">800</option>
+                        <option value="51.3513">900</option>
+                        <option value="54.0540">1000</option>
+                        <option value="56.7567">2000</option>
+                        <option value="59.4594">3000</option>
+                        <option value="62.1621">4000</option>
+                        <option value="67.5675">5000</option>
+                        <option value="72.9729">6000</option>
+                        <option value="75.6756">7000</option>
+                        <option value="91.8918">8000</option>
+                        <option value="94.5945">9000</option>
+                        <option value="97.2972">10000</option>
+                        <option value="99.9999">100000</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="com-value col-12 col-md-3 text-center p-0 p-md-2 mb-4 mb-md-0" id="comVal">
+                <label class="form-label d-block" for="">Commission per lot</label>
+                <h5 class="fw-bold">&#36;10</h5>
+            </div>
+            <div class="total col-12 col-md-3 text-center p-0 p-md-2 mb-4 mb-md-0" id="totalVal">
+                <label class="form-label d-block" for="">Your total commission</label>
+                <h5 class="fw-bold" id="totalCom">&#36;0</h5>
+            </div>
+        </div>
+        <div class="my-4">
+            <div class="progress">
+                <div id="theprogress" class="progress-bar progress-bar-striped fw-bold" alt="b4" role="progressbar"
+                    style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0 lots</div>
+            </div>
+            <div class="mt-2 mb-4 position-relative">
+                <div class="ruler">
+                    <div class="mili-ruler position-absolute" style="left: 0%;height: 10px; width: 3px;"></div>
+                    <div class="mili-mark position-absolute pt-2" style="left: 0%; margin-left: -5px;">0 lots</div>
+                    <div class="mili-ruler position-absolute" style="left: 2.7027%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 5.40541%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 8.10811%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 10.8108%;"></div>
+                    <!-- 13.5135%  50 lots set-->
+                    <div class="mili-ruler position-absolute" style="left: 13.5135%; height: 10px; width: 3px;"></div>
+                    <div class="mili-mark position-absolute pt-2" style="left: 13.5135%; margin-left: -5px;">50 lots
+                    </div>
+                    <div class="mili-ruler position-absolute" style="left: 16.2162%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 18.9189%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 21.6216%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 24.3243%;"></div>
+                    <!-- 100 lots set -->
+                    <div class="mili-ruler position-absolute" style="left: 27.0270%; height: 10px; width: 3px;"></div>
+                    <div class="mili-mark position-absolute pt-2" style="left: 27.0270%; margin-left: -5px;">100 lots
+                    </div>
+                    <div class="mili-ruler position-absolute" style="left: 29.7297%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 32.4324%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 35.1351%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 37.8378%;"></div>
+                    <!-- 200 lots set -->
+                    <div class="mili-ruler position-absolute" style="left: 40.5405%; height: 10px; width: 3px;"></div>
+                    <div class="mili-mark position-absolute pt-2" style="left: 40.5405%; margin-left: -5px;">500 lots
+                    </div>
+                    <div class="mili-ruler position-absolute" style="left: 43.2432%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 45.9459%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 48.6486%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 51.3513%;"></div>
+                    <!-- 300 lots set -->
+                    <div class="mili-ruler position-absolute" style="left: 54.0540%; height: 10px; width: 3px;"></div>
+                    <div class="mili-mark position-absolute pt-2" style="left: 54.0540%; margin-left: -5px;">1k lots
+                    </div>
+                    <div class="mili-ruler position-absolute" style="left: 56.7567%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 59.4594%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 62.1621%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 64.8648%;"></div>
+                    <!-- 400 lots set -->
+                    <div class="mili-ruler position-absolute" style="left: 67.5675%; height: 10px; width: 3px;"></div>
+                    <div class="mili-mark position-absolute pt-2" style="left: 67.5675%; margin-left: -5px;">5k lots
+                    </div>
+                    <div class="mili-ruler position-absolute" style="left: 70.2702%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 72.9729%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 75.6756%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 78.3783%;"></div>
+                    <!-- 500 lots set -->
+                    <div class="mili-ruler position-absolute" style="left: 83.7837%; height: 10px; width: 3px;"></div>
+                    <div class="mili-mark position-absolute pt-2" style="left: 83.7837%; margin-left: -5px;">10k lots
+                    </div>
+                    <div class="mili-ruler position-absolute" style="left: 86.4864%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 89.1891%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 91.8918%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 94.5945%;"></div>
+                    <!-- over 1k lots set -->
+                    <div class="mili-ruler position-absolute" style="left: 97.2972%; height: 10px; width: 3px;"></div>
+                    <div class="mili-mark position-absolute pt-2" style="left: 97.2972%; margin-left: -5px;">100k</div>
+                    <div class="mili-ruler position-absolute" style="left: 99.9999%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 99.9999%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 99.9999%;"></div>
+                    <div class="mili-ruler position-absolute" style="left: 99.9999%;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script>
+    $(document).ready(function () {
+
+        $("#actType").change(function () {
+            // selected account
+            var actualCommission = $("#actType option:selected").val();
+            var lotsSize = $("#lotsTrade option:selected").text();
+
+            var totalFromAT = actualCommission * lotsSize;
+
+            $("#comVal h5").text("$" + actualCommission);
+            $("#totalVal h5").text("$" + totalFromAT);
+        });
+
+        $("#lotsTrade").change(function () {
+
+            var actualCommission = $("#actType option:selected").val();
+            var lotsSize = $("#lotsTrade option:selected").text();
+
+            var totalFromAT = actualCommission * lotsSize;
+
+            // selected value
+            var optionSelected = $("option:selected", this);
+            var valueSelected = this.value;
+
+
+            // lot size to display
+            var lotsSelected = $("#lotsTrade option:selected").text();
+
+            $("#comVal h5").text("$" + actualCommission);
+            $("#totalVal h5").text("$" + totalFromAT);
+            $("#theprogress").attr("aria-valuenow", valueSelected).css("width", valueSelected + "%");
+            $("#theprogress").text(lotsSelected + " lots");
+
+        })
+
+
+
+
+
+
+    });
+</script>
